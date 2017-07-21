@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ShipWars</title>
+    <link rel="stylesheet" type="text/css" href="/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+
+<body ng-app='ships' ng-controller='shipCon'>
+    <div class='ship-yard'>
+        <div class='undo-last' ng-show='parts.length>1' ng-click='removeLast()' title='Undo last part'>&#8634;</div>
+        <div class='parts-left' title='Number of special parts (engines, shields, or guns) you can still place.'>{{specialLeft}}</div>
+        <div class='ship-container' style='left:{{pos.x}}px;top:{{pos.y}}px;transform:scale({{getScales()}}) rotateZ({{shipRot}}deg);transform-origin:{{getCgStyle().x}}px {{getCgStyle().y}}px;'>
+            <div class='ship-part' ng-repeat='pt in parts' style='left:{{pt.x*20}}px;top:{{pt.y*20}}px' title='{{pt}}'>
+                <div class='edge edge-top' ng-if='checkEdge(pt,"t")' ng-click='makeNewPart(pt,"t",$event)'></div>
+                <div class='edge edge-left' ng-if='checkEdge(pt,"l")' ng-click='makeNewPart(pt,"l",$event)'></div>
+                <div class='edge edge-bottom' ng-if='checkEdge(pt,"b")' ng-click='makeNewPart(pt,"b",$event)'></div>
+                <div class='edge edge-right' ng-if='checkEdge(pt,"r")' ng-click='makeNewPart(pt,"r",$event)'></div>
+                <span ng-if='pt.type=="engine"' title='engine'>&#9650;</span>
+                <span ng-if='pt.type=="shield"' title='shield'>&#9675;</span>
+                <span ng-if='pt.type=="gun"' title='gun'>&#10072;</span>
+            </div>
+            <div class='cg' style='left:{{getCgStyle().x}}px;top:{{getCgStyle().y}}px;' title="This is your ship's center of mass."></div>
+        </div>
+        <div class='expl small'>ctrl: engine. alt: gun. ctrl+alt: shield.
+        <br>
+        'w' or 'd' to rotate.
+        </div>
+    </div>
+    <script src='https://cdn.socket.io/socket.io-1.2.0.js'></script>
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bootbox.js/bootbox.js"></script>
+    <script src="/angular/angular.min.js"></script>
+    <script src="/socket.io-client/dist/socket.io.js"></script>
+    <script src="./js/all.min.js"></script>
+</body>
+
+</html>

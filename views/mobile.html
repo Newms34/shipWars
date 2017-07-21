@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Heli</title>
+    <link rel="stylesheet" type="text/css" href="/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+
+<body ng-app='heli' ng-controller='phone-con' ng-cloak>
+    <div class='panel panel-success mob-pan'>
+        <div class='panel-heading'>
+            <h1>INFO:</h1>
+        </div>
+        <div class='panel-body'>
+            <div class='row'>
+                <div class='col-md-3 alert-info'>Phone Code: </div>
+                <div class='col-md-5'>{{phoneName}}</div>
+                <div class='col-md-3'>
+                    <button class='btn btn-md btn-info' ng-click='showInf(0)'>?</button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 alert-info'>Game Code: </div>
+                <div class='col-md-5' ng-show='user'>{{user}}</div>
+                <div class='col-md-5' ng-show='user==false'>(pending)</div>
+                <div class='col-md-3'>
+                    <button class='btn btn-md btn-info' ng-click='showInf(1)'>?</button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 alert-info'>Phone Role: </div>
+                <div class='col-md-5' ng-show='role=="cyc"'>Cyclic</div>
+                <div class='col-md-5' ng-show='role=="col"'>Collective</div>
+                <div class='col-md-5' ng-show='role=="joy"'>Joystick</div>
+                <div class='col-md-5' ng-show='role==false'>(pending)</div>
+                <div class='col-md-3'>
+                    <button class='btn btn-md btn-info' ng-click='showInf(2)'>?</button>
+                </div>
+            </div>
+            <div class='row'>
+                <button class='btn btn-lg btn-warning col-sm-12 col-md-4 col-md-offset-4' ng-click='reZero();'>Re-zero</button>
+            </div>
+        </div>
+    </div>
+    <script src='https://cdn.socket.io/socket.io-1.2.0.js'></script>
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bootbox.js/bootbox.js"></script>
+    <script src="/angular/angular.min.js"></script>
+    <script src="/socket.io-client/socket.io.js"></script>
+    <script src="./js/all.min.js"></script>
+</body>
+
+</html>
