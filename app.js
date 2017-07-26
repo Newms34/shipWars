@@ -34,67 +34,58 @@ var io = require('socket.io')(http);
 4.) send phone code + desktop UN to server. 
 5.) pipe thru to phone via phone code. Phone registers username of desktop.
 */
-var pendingPhoneCodes = ['dave123', 'dave321']; //list of phone codes that have not yet been assigned. Includes test phone code.
+var pendingPhoneCodes = ['dave123', 'dave321'],
+    ships = [], //list of phone codes that have not yet been assigned. Includes test phone code.
+    lazers = []; //list of 'lasers';
 io.on('connection', function(socket) {
+
+    //player format: 
+
     socket.on('newPhone', function(phone) {
         pendingPhoneCodes.push(phone);
         console.log('PHONES:', pendingPhoneCodes)
     });
-    socket.on('moveData', function(moveObj) {
-        io.emit('outData', moveObj);
+    socket.on('playerMove', function(p) {
+        //update player
+        console.log('player movement!', p)
+        var foundShip = false,
+            i = 0;
+        for (i; i < ships.length; i++) {
+            if (ships[i].id == p.id) {
+                ships[i].vx = p.vx;
+                ships[i].vy = p.vy;
+                ships[i].vr = p.vr;
+                foundShip = true;
+                console.log('ship status', ships[i].x, ships[i].y, ships[i].r)
+            }
+        }
+        if (!foundShip) {
+            console.log('Was not able to find ship', p.id);
+        }
     });
-    socket.on('checkPhone', function(phoneObj) {
+    socket.on('newPlayer', function(p) {
+        ships.push(p);
+        console.log(p)
+    })
+    socket.on('checkAndReg', function(phoneObj) {
         console.log('PHONE IS', JSON.stringify(phoneObj))
         if (pendingPhoneCodes.indexOf(phoneObj.code) != -1) {
             phoneObj.valid = true;
+            pendingPhoneCodes.slice(pendingPhoneCodes.indexOf(phoneObj.code), 1)
         } else {
             phoneObj.valid = false;
         }
-        io.emit('phoneCheckResult', phoneObj)
+        io.emit('checkAndRegFront', phoneObj)
     });
-    socket.on('registerPhones', function(p) {
-        console.log('REGISTER PHONE SERVER', p)
-        if (p.cyc) {
-            //this phone is no longer 'available' for use
-            pendingPhoneCodes.splice(pendingPhoneCodes.indexOf(p.cyc), 1);
-            console.log('registering cyc', p.cyc)
-            io.emit('regPhone', {
-                u: p.desk,
-                name: p.cyc,
-                role: 'cyc'
-            })
+    var t = setInterval(function() {
+        //send out current pos of ships.
+        for (var i=0; i<ships.length;i++){
+            ships[i].x+=ships[i].vx;
+            ships[i].y+=ships[i].vy;
+            ships[i].r+=ships[i].vr;
         }
-        if (p.col) {
-            //this phone is no longer 'available' for use
-            pendingPhoneCodes.splice(pendingPhoneCodes.indexOf(p.col), 1);
-            console.log('registering col', p.col)
-            io.emit('regPhone', {
-                u: p.desk,
-                name: p.col,
-                role: 'col'
-            })
-        }
-        if (p.joy) {
-            pendingPhoneCodes.splice(pendingPhoneCodes.indexOf(p.joy), 1);
-            io.emit('regPhone', {
-                name: p.joy,
-                u: p.desk,
-                role: 'joy'
-            })
-        }
-    });
-    socket.on('pRegisterPhones', function(p) {
-        pendingPhoneCodes.splice(pendingPhoneCodes.indexOf(p.joy), 1);
-        io.emit('regPhone', {
-            name: p.joy,
-            u: p.desk,
-            role: 'joy'
-        })
-    })
-    socket.on('phoneOri', function(ori) {
-        //just pipe thru to front end 
-        io.emit('oriToDesk', ori);
-    })
+        io.emit('shipPosits', { ships: ships, lazers: lazers });
+    }, 100)
 });
 io.on('error', function(err) {
     console.log("SocketIO error was", err)

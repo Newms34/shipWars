@@ -1,0 +1,44 @@
+THRUSTER RESEARCH:
+
+I = moment of inertia
+
+ratio of angular to translation accel (and force) (tranForce and angForce) is governed by distance to center (r), where @ R = 0,  tranForce = totForce, angForce = 0, and @ R=infinity, tranForce = 0 and angForce  = totForce.
+
+the linear acceleration should be given by tranForce/M = A, where M is the object's mass.
+rotational accel should involve SOME sort of angle. Is it just angForce/(M*radius)?
+
+is tranForce+angForce = totForce?
+
+(0,1),(inf,1)
+
+angular accel SHOULD be:
+totForce X vectorR/I((m/12)*(Math.pow(h,2)+Math.pow(w,2)))
+ OR
+radiusFromCenter*totForce*Math.sin(Math.PI*ang/180)/((m/12)*(Math.pow(h,2)+Math.pow(w,2)))
+
+
+r X F/I
+
+m*kg            1 
+------------- = ------------- =
+kg*m*m*m *s*s   m^2 s^2
+
+
+m * kg/(m*s^2)  
+------------- =
+kg*m*m         
+
+
+We'll need to assume the shape of the ship @ some point. Either sphere or retangular plane
+
+change in KEtot is work done on object, which we (may?) be able to find from accel/force?
+
+angForce = r* F sin(theta), where theta is angular btwn force dir and radius (r)
+
+rotForce = Torque/I
+
+FUNCTION: 
+given mass M, (x,y) from cg/cm, and force denoted by 'P' property of thruster, determine first rotational force, then translational force.
+
+
+NEW PLAYER adds player to list of players on back end. This is sent out every N seconds 

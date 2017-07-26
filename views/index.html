@@ -7,25 +7,57 @@
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 
-<body ng-app='ships' ng-controller='shipCon'>
-    <div class='ship-yard'>
-        <div class='undo-last' ng-show='parts.length>1' ng-click='removeLast()' title='Undo last part'>&#8634;</div>
-        <div class='parts-left' title='Number of special parts (engines, shields, or guns) you can still place.'>{{specialLeft}}</div>
-        <div class='ship-container' style='left:{{pos.x}}px;top:{{pos.y}}px;transform:scale({{getScales()}}) rotateZ({{shipRot}}deg);transform-origin:{{getCgStyle().x}}px {{getCgStyle().y}}px;'>
-            <div class='ship-part' ng-repeat='pt in parts' style='left:{{pt.x*20}}px;top:{{pt.y*20}}px' title='{{pt}}'>
-                <div class='edge edge-top' ng-if='checkEdge(pt,"t")' ng-click='makeNewPart(pt,"t",$event)'></div>
-                <div class='edge edge-left' ng-if='checkEdge(pt,"l")' ng-click='makeNewPart(pt,"l",$event)'></div>
-                <div class='edge edge-bottom' ng-if='checkEdge(pt,"b")' ng-click='makeNewPart(pt,"b",$event)'></div>
-                <div class='edge edge-right' ng-if='checkEdge(pt,"r")' ng-click='makeNewPart(pt,"r",$event)'></div>
+<body ng-app='ships' ng-controller='shipCon' style='background-position: {{bgPos.x*0.01}}px {{bgPos.y*0.01}}px;'>
+    <div class='ship-yard' ng-show='buildMode'>
+        <div class='btn btn-xs btn-success' ng-click='constExplain()'>?</div>
+        <div class='btn btn-xs btn-danger' ng-show='parts.length>1' ng-click='removeLast()' title='Undo last part'>&#8634;</div>
+        <div class='special-parts-left' title='Number of special parts (engines, shields, or guns) you can still place.'>{{specialLeft}}</div>
+        <div class='parts-left' title='Total number of parts you can still place.'>{{totalLeft}}</div>
+        <div class='ship-container' style='left:{{pos.x}}px;top:{{pos.y}}px;transform:scale({{getScales()}}) rotateZ({{shipRot}}deg);transform-origin:{{(getCgStyle().x*20)+8}}px {{(getCgStyle().y*20)+8}}px;'>
+            <div class='ship-part' ng-repeat='pt in parts' style='left:{{pt.x*20}}px;top:{{pt.y*20}}px' title='{{pt}}' ng-click='pickStats(pt,$index)'>
+                <div class='edge edge-top' ng-if='checkEdge(pt,"t")' ng-click='makeNewPart(pt,"t",$event);noBubble($event);'></div>
+                <div class='edge edge-left' ng-if='checkEdge(pt,"l")' ng-click='makeNewPart(pt,"l",$event);noBubble($event);'></div>
+                <div class='edge edge-bottom' ng-if='checkEdge(pt,"b")' ng-click='makeNewPart(pt,"b",$event);noBubble($event);'></div>
+                <div class='edge edge-right' ng-if='checkEdge(pt,"r")' ng-click='makeNewPart(pt,"r",$event);noBubble($event);'></div>
                 <span ng-if='pt.type=="engine"' title='engine'>&#9650;</span>
                 <span ng-if='pt.type=="shield"' title='shield'>&#9675;</span>
                 <span ng-if='pt.type=="gun"' title='gun'>&#10072;</span>
             </div>
-            <div class='cg' style='left:{{getCgStyle().x}}px;top:{{getCgStyle().y}}px;' title="This is your ship's center of mass."></div>
+            <div class='cg' style='left:{{(getCgStyle().x*20)+8}}px;top:{{(getCgStyle().y*20)+8}}px;' title="This is your ship's center of mass."></div>
         </div>
-        <div class='expl small'>ctrl: engine. alt: gun. ctrl+alt: shield.
-        <br>
-        'w' or 'd' to rotate.
+        <div class='btn btn-xs btn-primary pull-down' ng-click='play();'>Play</div>
+    </div>
+    <div class='pick-deets-bg' ng-show='deetPart!=-1' ng-click='deetPart=-1'>
+        <div class='col-md-6 col-md-offset-3 panel panel-primary' ng-click='noBubble($event);'>
+            <div class='panel-heading'>
+                <h4>Part Details</h4>
+            </div>
+            <div class='panel-body' ng-keydown='parseNewKey($event)'>
+                <h5>Bind keys to this part by pressing them and then pressing enter.</h5>
+                <hr> Enter a new key:
+                <input type="text" ng-model='newKey' readonly>
+                <!-- <textarea class='col-md-12' placeholder="Click here, and then enter the keys you wanna use to activate this part." readonly ng-model='currKeys' ng-keydown='parseNewKey($event)'></textarea> -->
+                <hr>
+                <h5>List of keybinds</h5>
+                <div class='col-md-12' ng-repeat='k in currKeys'>
+                    <div class='col-md-2'>Key: </div>
+                    <div class='col-md-2'>{{k}}</div>
+                    <div class='col-md-2'>
+                        <button class='btn btn-danger btn-sm' ng-click='removeKey($index)'>x</button>
+                    </div>
+                </div>
+                <hr>
+                <button class='col-md-4 col-md-offset-4 btn btn-primary' ng-click='parts[deetPart].keys = currKeys; deetPart=-1;'>Done</button>
+            </div>
+        </div>
+    </div>
+    <div class='play-field' ng-show='!buildMode' style='left:{{bgPos.x}}px;top:{{bgPos.y}}px;'>
+        <div class='sg-ship-cont' ng-repeat ='sh in allShips' style='left:{{sh.x}}px; top:{{sh.y}}px; transform:rotateZ({{sh.r}}deg);'>
+            <div class='ship-part' ng-repeat='pt in sh.parts' style='left:{{pt.x*20}}px;top:{{pt.y*20}}px' title='{{pt}}'>
+                <span ng-if='pt.type=="engine"' title='engine'>&#9650;</span>
+                <span ng-if='pt.type=="shield"' title='shield'>&#9675;</span>
+                <span ng-if='pt.type=="gun"' title='gun'>&#10072;</span>
+            </div>
         </div>
     </div>
     <script src='https://cdn.socket.io/socket.io-1.2.0.js'></script>

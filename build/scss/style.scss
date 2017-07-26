@@ -1,7 +1,7 @@
 html,
 body {
-    width: 100%;
-    height: 100%;
+    width: 10000px;
+    height: 10000px;
     margin: 0;
     background: url('../img/starbg.jpg');
     background-attachment: fixed;
@@ -13,61 +13,64 @@ body {
     height: 200px;
     border: 3px ridge #aaa;
     background: url('../img/metal.jpg');
-    span{
-        color:#fff;
+    span {
+        color: #fff;
     }
-    .expl{
-        width:100%;
-        background:#fed;
-        color:#000;
-        position:absolute;
-        bottom:0;
-        left:0;
+    .pull-down {
+        position: absolute;
+        bottom: 0;
+        left: 0;
     }
-    .undo-last{
-        position:absolute;
-        left:0;
-        top:0;
-        width:20px;
-        height:20px;
-        background:#900;
-        color:#fff;
-        transition-duration:.2s;
-        cursor:pointer;
-        border:2px outset #900;
-        &:hover{
-            background:#b00;
+    .parts-left {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        background: #111;
+        color: #fff;
+        border: 2px inset #111;
+        &::after {
+            content: '\25a0';
+            left: -20px;
+            position: absolute;
         }
     }
-    .parts-left{
-        position:absolute;
-        right:0;
-        top:0;
-        width:20px;
-        height:20px;
-        background:#111;
-        color:#fff;
-        border:2px inset #111;
+    .special-parts-left {
+        position: absolute;
+        right: 0;
+        top: 22px;
+        width: 20px;
+        height: 20px;
+        background: #111;
+        color: #fff;
+        border: 2px inset #111;
+        &::after {
+            content: '\2699';
+            left: -20px;
+            position: absolute;
+        }
     }
     .ship-container {
         position: absolute;
-        .cg{
-            position:absolute;
-            width:5px;
-            height:5px;
-            border-radius:50%;
-            background:#ccf;
-            transition-duration:.2s;
-            &:hover{
-                width:10px;
-                height:10px;
+        .cg {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #ccf;
+            transition-duration: .2s;
+            &:hover {
+                transform: translateX(-2px) translateY(-2px);
+                width: 10px;
+                height: 10px;
             }
         }
         .ship-part {
             position: absolute;
             border: 1px solid #333;
             width: 20px;
-            text-align:center;
+            text-align: center;
             background: #000;
             height: 20px;
             .edge {
@@ -101,6 +104,31 @@ body {
                     background: #fff;
                 }
             }
+        }
+    }
+}
+
+.pick-deets-bg {
+    background: rgba(0, 0, 0, .7);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+}
+
+.play-field {
+    position:absolute;
+    width:10000px;
+    height:10000px;
+    & .sg-ship-cont{
+        position:absolute;
+        transform-origin:50% 50%;
+        & .ship-part {
+            position: absolute;
+            border: 1px solid #333;
+            width: 20px;
+            text-align: center;
+            background: url('../img/metal.jpg');
+            height: 20px;
         }
     }
 }
