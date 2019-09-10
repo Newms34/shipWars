@@ -42,3 +42,20 @@ given mass M, (x,y) from cg/cm, and force denoted by 'P' property of thruster, d
 
 
 NEW PLAYER adds player to list of players on back end. This is sent out every N seconds 
+
+
+
+IDEA:
+move all object so that MIN object and MAX object are centered around... center.
+Then coords should be dist to center.
+
+if dim is even && > 1, +.5?
+ - .5?
+
+cases:
+4 wide: 2.5
+3 wide: 2 is middle
+2 wide:1.5
+1 wide: (special case?) 1 is middle
+
+groove addicts: interstellar

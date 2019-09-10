@@ -73,6 +73,9 @@ body {
             text-align: center;
             background: #000;
             height: 20px;
+            .key-alert {
+                color: #f77!important;
+            }
             .edge {
                 position: absolute;
                 left: 0;
@@ -116,15 +119,14 @@ body {
 }
 
 .play-field {
-    position:absolute;
-    width:10000px;
-    height:10000px;
-    & .sg-ship-cont{
-        position:absolute;
-        transform-origin:50% 50%;
+    position: absolute;
+    width: 10000px;
+    height: 10000px;
+    & .sg-ship-cont {
+        position: absolute;
         & .ship-part {
             position: absolute;
-            border: 1px solid #333;
+            // border: 1px solid #333;
             width: 20px;
             text-align: center;
             background: url('../img/metal.jpg');

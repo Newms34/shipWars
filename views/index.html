@@ -19,25 +19,23 @@
                 <div class='edge edge-left' ng-if='checkEdge(pt,"l")' ng-click='makeNewPart(pt,"l",$event);noBubble($event);'></div>
                 <div class='edge edge-bottom' ng-if='checkEdge(pt,"b")' ng-click='makeNewPart(pt,"b",$event);noBubble($event);'></div>
                 <div class='edge edge-right' ng-if='checkEdge(pt,"r")' ng-click='makeNewPart(pt,"r",$event);noBubble($event);'></div>
-                <span ng-if='pt.type=="engine"' title='engine'>&#9650;</span>
-                <span ng-if='pt.type=="shield"' title='shield'>&#9675;</span>
-                <span ng-if='pt.type=="gun"' title='gun'>&#10072;</span>
+                <span ng-if='pt.type=="engine"' ng-class="{'key-alert':!pt.keys||!pt.keys.length}" title='engine'>&#9650;</span>
+                <span ng-if='pt.type=="shield"' ng-class="{'key-alert':!pt.keys||!pt.keys.length}" title='shield'>&#9675;</span>
+                <span ng-if='pt.type=="gun"' ng-class="{'key-alert':!pt.keys||!pt.keys.length}" title='gun'>&#10072;</span>
             </div>
             <div class='cg' style='left:{{(getCgStyle().x*20)+8}}px;top:{{(getCgStyle().y*20)+8}}px;' title="This is your ship's center of mass."></div>
         </div>
         <div class='btn btn-xs btn-primary pull-down' ng-click='play();'>Play</div>
     </div>
-    <div class='pick-deets-bg' ng-show='deetPart!=-1' ng-click='deetPart=-1'>
+    <div class='pick-deets-bg' ng-show='deetPart!=-1' ng-click='deetPart=-1' deet-focus>
         <div class='col-md-6 col-md-offset-3 panel panel-primary' ng-click='noBubble($event);'>
             <div class='panel-heading'>
                 <h4>Part Details</h4>
             </div>
-            <div class='panel-body' ng-keydown='parseNewKey($event)'>
+            <div class='panel-body' id='deets-panel' ng-keyup='parseNewKey($event)' tabindex='-1'>
                 <h5>Bind keys to this part by pressing them and then pressing enter.</h5>
-                <hr> Enter a new key:
-                <input type="text" ng-model='newKey' readonly>
-                <!-- <textarea class='col-md-12' placeholder="Click here, and then enter the keys you wanna use to activate this part." readonly ng-model='currKeys' ng-keydown='parseNewKey($event)'></textarea> -->
                 <hr>
+                Key: {{newKey}}
                 <h5>List of keybinds</h5>
                 <div class='col-md-12' ng-repeat='k in currKeys'>
                     <div class='col-md-2'>Key: </div>
@@ -52,7 +50,7 @@
         </div>
     </div>
     <div class='play-field' ng-show='!buildMode' style='left:{{bgPos.x}}px;top:{{bgPos.y}}px;'>
-        <div class='sg-ship-cont' ng-repeat ='sh in allShips' style='left:{{sh.x}}px; top:{{sh.y}}px; transform:rotateZ({{sh.r}}deg);'>
+        <div class='sg-ship-cont' ng-repeat ='sh in allShips' style='left:{{sh.x}}px; top:{{sh.y}}px;transform-origin:{{getCenter(sh).x*20}}px {{getCenter(sh).y*20}}px ;transform:rotateZ({{sh.r}}deg);'>
             <div class='ship-part' ng-repeat='pt in sh.parts' style='left:{{pt.x*20}}px;top:{{pt.y*20}}px' title='{{pt}}'>
                 <span ng-if='pt.type=="engine"' title='engine'>&#9650;</span>
                 <span ng-if='pt.type=="shield"' title='shield'>&#9675;</span>
